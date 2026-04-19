@@ -30,8 +30,8 @@
 ## Pendiente
 
 ### Alta prioridad
-1. **Unirse a sala** - El botón "Unirme con código" no está conectado a Firebase
-2. **Flujo de partida completo** - Solo está el lobby
+1. **Flujo de partida completo** - Crear pregunta, enviar respuesta, calcular puntuación
+2. **Banco de preguntas** - Añadir preguntas con año correcto
 3. **Preguntas** - Necesita banco de preguntas
 4. **Gestión de rondas** - Enviar respuesta, calcular puntuación, resultados
 
