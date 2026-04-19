@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TestCultura MVP UI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <div class="brand">
+        <div class="eyebrow">Prototipo navegable · MVP móvil multijugador</div>
+        <h1>TestCultura</h1>
+        <p>Esta versión muestra una sola pantalla cada vez y permite recorrer el flujo completo de una partida: inicio, lobby, pregunta, espera, resultado y marcador.</p>
+      </div>
+
+      <div class="card">
+        <strong>Qué incluye</strong>
+        <div class="small muted" style="margin-top:8px">Mobile-first, jerarquía clara, marcador compartido y navegación simple entre estados.</div>
+        <div class="mini-nav">
+          <button onclick="showScreen('home')">Inicio</button>
+          <button onclick="showScreen('question')">Pregunta</button>
+          <button onclick="showScreen('score')">Marcador</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="phone">
+      <div class="phone-inner">
+        <div class="topbar">
+          <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="small muted" id="screenLabel">Inicio</div>
+        </div>
+
+        <section class="screen active" id="screen-home">
+          <div class="grow stack" style="justify-content:space-between;">
+            <div class="stack">
+              <div>
+                <div class="small muted">Juego de años y acontecimientos</div>
+                <h2 style="font-size:38px;line-height:1;margin:8px 0 0;">Entrar a jugar</h2>
+              </div>
+              <div class="card stack">
+                <label class="small" style="font-weight:700;">Tu nombre</label>
+                <input class="input" id="playerName" value="Carlos" />
+                <button class="btn btn-primary" onclick="handleCreateRoom()">Crear partida</button>
+                <button class="btn btn-secondary" onclick="showScreen('join')">Unirme con código</button>
+              </div>
+            </div>
+            <div class="footer-note center">Dos acciones principales. Sin distracciones. Ideal para móvil.</div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-join">
+          <div class="row">
+            <button class="btn btn-secondary" style="width:auto;padding:10px 14px;" onclick="showScreen('home')">←</button>
+            <div class="small muted">Unirse a una sala</div>
+          </div>
+          <div class="card stack">
+            <label class="small" style="font-weight:700;">Código de sala</label>
+            <input class="input year" id="joinCode" maxlength="4" value="4829" />
+            <button class="btn btn-primary" onclick="handleJoinRoom()">Entrar</button>
+          </div>
+          <div class="grow"></div>
+        </section>
+
+        <section class="screen" id="screen-lobby">
+          <div class="card">
+            <div class="small muted">Código de sala</div>
+            <div class="row" style="margin-top:6px;">
+              <div style="font-size:36px;font-weight:800;letter-spacing:.24em;" id="roomCode">4829</div>
+              <button class="btn btn-secondary" style="width:auto;padding:10px 14px;" onclick="copyCode()">Copiar</button>
+            </div>
+          </div>
+          <div class="card grow stack">
+            <div class="row"><strong>Jugadores</strong><span class="small muted">4/8</span></div>
+            <div class="list-item"><span style="font-weight:600;" id="selfNameLobby">Carlos</span><span class="pill">Host</span></div>
+            <div class="list-item"><span style="font-weight:600;">Ana</span><span class="pill">Lista</span></div>
+            <div class="list-item"><span style="font-weight:600;">Luis</span><span class="pill pill-dark">Listo</span></div>
+            <div class="list-item"><span style="font-weight:600;">Marta</span><span class="pill">Lista</span></div>
+          </div>
+          <button class="btn btn-primary" onclick="showScreen('question')">Empezar partida</button>
+          <button class="btn btn-ghost" onclick="showScreen('home')">Salir de la sala</button>
+        </section>
+
+        <section class="screen" id="screen-question">
+          <div class="row small"><span class="pill">Pregunta 3/10</span><span class="muted">18 s</span></div>
+          <div class="card grow" style="display:flex;flex-direction:column;justify-content:space-between;gap:20px;">
+            <div class="stack">
+              <div class="small" style="font-weight:700;color:#6b7280;">¿En qué año ocurrió esto?</div>
+              <h2 class="question">Caída del Muro de Berlín</h2>
+              <div class="small muted">Tu respuesta suma la distancia respecto al año real. Menos puntos es mejor.</div>
+            </div>
+            <div class="stack">
+              <input class="input year" id="answerYear" value="1989" />
+              <button class="btn btn-primary" onclick="submitAnswer()">Confirmar año</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-wait">
+          <div class="card"><div class="small muted">Tu respuesta enviada</div><div class="big-number" style="margin-top:8px;" id="submittedYear">1989</div></div>
+          <div class="card grow stack">
+            <strong>Estado de la ronda</strong>
+            <div class="list-item"><span id="selfNameWait">Tú</span><span class="pill pill-dark">Respondido</span></div>
+            <div class="list-item"><span>Ana</span><span class="pill pill-dark">Respondido</span></div>
+            <div class="list-item"><span>Luis</span><span class="pill pill-dark">Respondido</span></div>
+            <div class="list-item"><span>Marta</span><span class="pill">Pensando</span></div>
+          </div>
+          <div class="small muted center">Se revelará la solución cuando todos hayan respondido.</div>
+          <button class="btn btn-primary" onclick="showScreen('result')">Forzar demo de resultado</button>
+        </section>
+
+        <section class="screen" id="screen-result">
+          <div class="card"><div class="small muted">Año correcto</div><div style="font-size:56px;font-weight:800;margin-top:8px;">1989</div><div class="small muted" style="margin-top:8px;">Cuanto más cerca, menos puntos.</div></div>
+          <div class="card grow stack">
+            <strong>Respuestas</strong>
+            <div class="list-item dark">
+              <div><div style="font-weight:700;" id="selfNameResult">Tú</div><div class="sub" id="selfAnswerResult">1992</div></div>
+              <div style="text-align:right;"><div style="font-weight:800;" id="selfDiffResult">+3</div><div class="sub">distancia</div></div>
+            </div>
+            <div class="list-item"><div><div style="font-weight:700;">Luis</div><div class="sub">1989</div></div><div style="text-align:right;"><div style="font-weight:800;">+0</div><div class="sub">distancia</div></div></div>
+            <div class="list-item"><div><div style="font-weight:700;">Marta</div><div class="sub">1990</div></div><div style="text-align:right;"><div style="font-weight:800;">+1</div><div class="sub">distancia</div></div></div>
+            <div class="list-item"><div><div style="font-weight:700;">Ana</div><div class="sub">1991</div></div><div style="text-align:right;"><div style="font-weight:800;">+2</div><div class="sub">distancia</div></div></div>
+          </div>
+          <button class="btn btn-primary" onclick="showScreen('score')">Ver marcador</button>
+        </section>
+
+        <section class="screen" id="screen-score">
+          <div class="card">
+            <div class="row" style="align-items:flex-end;">
+              <div><div class="small muted">Clasificación tras 3 rondas</div><div style="font-size:28px;font-weight:800;line-height:1.15;margin-top:6px;">Va ganando quien menos suma</div></div>
+              <span class="pill">3/10</span>
+            </div>
+          </div>
+          <div class="card grow stack">
+            <div class="list-item dark">
+              <div class="row" style="justify-content:flex-start;"><div class="rank">1</div><div><div style="font-weight:700;" id="selfNameScore">Tú</div><div class="sub" id="selfRoundScore">Última ronda +3</div></div></div>
+              <div style="font-size:30px;font-weight:800;" id="selfTotalScore">3</div>
+            </div>
+            <div class="list-item"><div class="row" style="justify-content:flex-start;"><div class="rank">2</div><div><div style="font-weight:700;">Luis</div><div class="sub">Última ronda +5</div></div></div><div style="font-size:30px;font-weight:800;">5</div></div>
+            <div class="list-item"><div class="row" style="justify-content:flex-start;"><div class="rank">3</div><div><div style="font-weight:700;">Marta</div><div class="sub">Última ronda +8</div></div></div><div style="font-size:30px;font-weight:800;">8</div></div>
+            <div class="list-item"><div class="row" style="justify-content:flex-start;"><div class="rank">4</div><div><div style="font-weight:700;">Ana</div><div class="sub">Última ronda +12</div></div></div><div style="font-size:30px;font-weight:800;">12</div></div>
+          </div>
+          <button class="btn btn-primary" onclick="showScreen('question')">Siguiente pregunta</button>
+          <button class="btn btn-secondary" onclick="showScreen('home')">Volver al inicio</button>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
