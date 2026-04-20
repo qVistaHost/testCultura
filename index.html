@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TestCultura MVP UI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <div class="brand">
+        <div class="eyebrow">Prototipo navegable · MVP móvil multijugador</div>
+        <h1>TestCultura</h1>
+        <p>Juego de años y acontecimientos históricos.</p>
+      </div>
+    </section>
+
+    <section class="phone">
+      <div class="phone-inner">
+        <div class="topbar">
+          <div class="dots"><span class="dot active"></span></div>
+          <div class="small muted" id="screenLabel">Inicio</div>
+        </div>
+
+        <section class="screen active" id="screen-home">
+          <div class="grow stack" style="justify-content:space-between;">
+            <div class="stack">
+              <div>
+                <div class="small muted">Juego de años</div>
+                <h2 style="font-size:38px;line-height:1;margin:8px 0 0;">Entrar a jugar</h2>
+              </div>
+              <div class="card stack">
+                <label class="small" style="font-weight:700;">Tu nombre</label>
+                <input class="input" id="playerName" value="Carlos" />
+                <button class="btn btn-primary" onclick="handleCreateRoom()">Crear partida</button>
+                <button class="btn btn-secondary" onclick="showScreen('join')">Unirme con código</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-join">
+          <div class="row">
+            <button class="btn btn-secondary" style="width:auto;padding:10px 14px;" onclick="showScreen('home')">←</button>
+            <div class="small muted">Unirse a una sala</div>
+          </div>
+          <div class="card stack">
+            <label class="small" style="font-weight:700;">Código de sala</label>
+            <input class="input year" id="joinCode" maxlength="4" value="" />
+            <button class="btn btn-primary" onclick="handleJoinRoom()">Entrar</button>
+          </div>
+          <div class="grow"></div>
+        </section>
+
+        <section class="screen" id="screen-lobby">
+          <div class="card">
+            <div class="small muted">Código de sala</div>
+            <div class="row" style="margin-top:6px;">
+              <div style="font-size:36px;font-weight:800;letter-spacing:.24em;" id="roomCode">----</div>
+              <button class="btn btn-secondary" style="width:auto;padding:10px 14px;" onclick="copyCode()">Copiar</button>
+            </div>
+          </div>
+          <div class="card grow stack" id="lobbyPlayers">
+          </div>
+          <button class="btn btn-primary" onclick="startGame()">Empezar partida</button>
+          <button class="btn btn-ghost" onclick="showScreen('home')">Salir de la sala</button>
+        </section>
+
+        <section class="screen" id="screen-question">
+          <div class="row small"><span class="pill" id="questionNum">Pregunta 1/10</span><span class="muted">∞ s</span></div>
+          <div class="card grow" style="display:flex;flex-direction:column;justify-content:space-between;gap:20px;">
+            <div class="stack">
+              <div class="small" style="font-weight:700;color:#6b7280;">¿En qué año ocurrió?</div>
+              <h2 class="question" id="questionText">Cargando...</h2>
+              <div class="small muted">Menos distancia = menos puntos.</div>
+            </div>
+            <div class="stack">
+              <input class="input year" id="answerYear" value="" />
+              <button class="btn btn-primary" onclick="submitAnswer()">Confirmar año</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-wait">
+          <div class="card"><div class="small muted">Tu respuesta</div><div class="big-number" id="submittedYear">-</div></div>
+          <div class="card"><div class="small muted">Año correcto</div><div class="big-number" id="correctYear">-</div></div>
+          <div class="card grow stack">
+            <strong>Estado</strong>
+            <div id="roundStatus"></div>
+          </div>
+          <div class="small muted center" id="waitMessage">Esperando...</div>
+          <div id="roundAnswers"></div>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none;">Siguiente</button>
+        </section>
+
+        <section class="screen" id="screen-score">
+          <div class="card">
+            <div class="small muted">Clasificación</div>
+            <div style="font-size:28px;font-weight:800;">Va ganando quien menos titik</div>
+            <span class="pill" id="questionCount">-/-</span>
+          </div>
+          <div class="card grow stack" id="scoreboard"></div>
+          <button class="btn btn-primary" onclick="showScreen('home')">Volver</button>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-database.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
