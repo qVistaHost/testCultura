@@ -327,7 +327,7 @@ function submitAnswer(){
     db.ref('rooms/' + currentRoom + '/players/' + playerName).update({
       answered: true,
       answer: year,
-      diff: diff,
+diff: diff,
       score: playerScore
     });
   }
@@ -383,9 +383,9 @@ function listenForAllAnswered(){
         let html = '<strong>Resultados</strong>';
         const sorted = Object.values(allAnswers).sort((a,b) => a.diff - b.diff);
         for(const p of sorted){
-          const isSelf = p.name === playerName;
+const isSelf = p.name === playerName;
           const totalScore = p.score || 0;
-          html += '<div class="list-item' + (isSelf ? ' dark' : '') + '"><div><div style="font-weight:700;">' + p.name + '</div><div class="sub">' + p.answer + '</div></div><div style="text-align:right;"><div style="font-weight:800;">+' + p.diff + '</div><div class="sub">+' + totalScore + '</div></div></div>';
+          html += '<div class="list-item' + (isSelf ? ' dark' : '') + '"><div><div style="font-weight:700;">' + p.name + '</div><div class="sub">' + p.answer + '</div></div><div style="text-align:right;"><div style="font-weight:800;">+' + p.diff + '</div><div class="sub">+' + totalScore + '</div></div></div>'
         }
         answersContainer.innerHTML = html;
       }
@@ -446,6 +446,19 @@ function updateScoreboard(){
       rank++;
     }
     container.innerHTML = html;
+  });
+}
+  db.ref('rooms/' + currentRoom + '/players').once('value').then(snap => {
+    const players = snap.val() || {};
+    const sorted = Object.values(players).sort((a,b) => (a.score||0) - (b.score||0));
+    let html = '';
+    let rank = 1;
+    for(const p of sorted){
+      const isSelf = p.name === playerName;
+      html += '<div class="list-item' + (isSelf ? ' dark' : '') + '"><div class="row" style="justify-content:flex-start;"><div class="rank">' + rank + '</div><div><div style="font-weight:700;">' + p.name + '</div><div class="sub">' + (p.answered ? 'Respondido' : '...') + '</div></div></div><div style="font-size:30px;font-weight:800;">' + (p.score||0) + '</div></div>';
+      rank++;
+    }
+container.innerHTML = html;
   });
 }
 
